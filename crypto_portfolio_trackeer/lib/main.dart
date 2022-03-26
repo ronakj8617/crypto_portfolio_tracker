@@ -2,6 +2,8 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:html';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:crypto_portfolio_trackeer/Text%20Names/titles.dart';
@@ -88,23 +90,42 @@ class _MainState extends State<Main> {
       ),
       body: Container(
         color: Colors.white,
-        child: data != null
-            ? ListView.builder(
-                itemCount: data!.length,
-                itemBuilder: ((context, index) {
-                  return Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text(data![index]),
-                        ],
-                      )
-                    ],
-                  );
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(9.0),
+            child: Column(
+              children: [
+                SizedBox(
+                    height: 120,
+                    child: Row(
+                      children: [Text('Name'), Text('USD'), Text('BTC')],
+                    )),
+                SizedBox(
+                  height: 40,
+                ),
+                Expanded(
+                  child: data != null
+                      ? ListView.builder(
+                          itemCount: data!.length,
+                          itemBuilder: ((context, index) {
+                            return Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(data![index]),
+                                  ],
+                                )
+                              ],
+                            );
 
-                  // return ListTile(title: Text(data![index]));
-                }))
-            : const CircularProgressIndicator(),
+                            // return ListTile(title: Text(data![index]));
+                          }))
+                      : const CircularProgressIndicator(),
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

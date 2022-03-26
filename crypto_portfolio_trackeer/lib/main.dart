@@ -33,25 +33,17 @@ class _MainState extends State<Main> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // data=new List<>();
 
-    // Map<String, dynamic> myMap = Map<String, dynamic>.from(x);
     fetchData();
-    // print(x);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
   void fetchData() async {
-    // var res = await http.get(url);
-    // data = jsonDecode(res.body);
-
     data = await getCurrencies() as List<String>;
 
     setState(() {});
@@ -60,28 +52,19 @@ class _MainState extends State<Main> {
   Future<List> getCurrencies() async {
     Uri apiUrl = Uri.parse(
         'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest');
-    // Make a HTTP GET request to the CoinMarketCap API.
-    // Await basically pauses execution until the get() function returns a Response
     http.Response response = await http.get(apiUrl, headers: {
       'Accepts': 'application/json',
       'X-CMC_PRO_API_KEY': '91da6e09-c276-4460-8ae2-d79f70b59975'
     });
-    // Using the JSON class to decode the JSON String
 
     Map<String, dynamic> map = json.decode(response.body);
-    // var data1 = map['data'][0]['name'];
-    // print(data1);      
-     
+
     var len = map['data'].length;
-    // List<String> data1=new List.empty();
-    List<String> data1=new List.empty(growable: true);
-    // if (len > 0) data1?.add(map['data'][0]['name']);
-    // data = map['data'][0]['name'];
-    // var x = data[0]["name"];
-    // print(x);
-    // var data1;
+
+    List<String> data1 = new List.empty(growable: true);
+
     for (int i = 0; i < len; i++) {
-      var x=map['data'][i]["name"];
+      var x = map['data'][i]["name"];
       data1.add(x);
     }
 
@@ -104,14 +87,25 @@ class _MainState extends State<Main> {
         toolbarHeight: 50,
       ),
       body: Container(
-          color: Colors.white,
-          child: data != null
-              ? ListView.builder(
-                  itemCount: data!.length,
-                  itemBuilder: ((context, index) {
-                    return ListTile(title: Text(data![index]));
-                  }))
-              : const CircularProgressIndicator()),
+        color: Colors.white,
+        child: data != null
+            ? ListView.builder(
+                itemCount: data!.length,
+                itemBuilder: ((context, index) {
+                  return Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(data![index]),
+                        ],
+                      )
+                    ],
+                  );
+
+                  // return ListTile(title: Text(data![index]));
+                }))
+            : const CircularProgressIndicator(),
+      ),
     );
   }
 }

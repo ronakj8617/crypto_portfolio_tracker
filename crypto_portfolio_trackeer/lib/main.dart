@@ -1,3 +1,6 @@
+// ignore_for_file: unnecessary_null_comparison
+
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
@@ -8,6 +11,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+
   runApp(MaterialApp(
     home: Main(),
     debugShowCheckedModeBanner: false,
@@ -24,17 +29,16 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   Uri url = Uri.parse('');
-  var data;
+  List<String>? data;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    var x = getCurrencies();
+    // data=new List<>();
 
     // Map<String, dynamic> myMap = Map<String, dynamic>.from(x);
-
+    fetchData();
     // print(x);
   }
 
@@ -47,6 +51,9 @@ class _MainState extends State<Main> {
   void fetchData() async {
     // var res = await http.get(url);
     // data = jsonDecode(res.body);
+
+    data = await getCurrencies() as List<String>;
+
     setState(() {});
   }
 
@@ -62,10 +69,23 @@ class _MainState extends State<Main> {
     // Using the JSON class to decode the JSON String
 
     Map<String, dynamic> map = json.decode(response.body);
-    List<dynamic> data = map['data'];
-    var x=data[0]["name"];
-    print(x);
-    return jsonDecode(response.body );
+    // var data1 = map['data'][0]['name'];
+    // print(data1);      
+     
+    var len = map['data'].length;
+    // List<String> data1=new List.empty();
+    List<String> data1=new List.empty(growable: true);
+    // if (len > 0) data1?.add(map['data'][0]['name']);
+    // data = map['data'][0]['name'];
+    // var x = data[0]["name"];
+    // print(x);
+    // var data1;
+    for (int i = 0; i < len; i++) {
+      var x=map['data'][i]["name"];
+      data1.add(x);
+    }
+
+    return data1;
   }
 
   @override
@@ -84,19 +104,14 @@ class _MainState extends State<Main> {
         toolbarHeight: 50,
       ),
       body: Container(
-        color: Colors.white,
-        child: Center(
-            child: Column(
-          children: [
-            SizedBox(height: 30),
-            CircleAvatar(),
-            SizedBox(
-              height: 30,
-            ),
-            CircularProgressIndicator()
-          ],
-        )),
-      ),
+          color: Colors.white,
+          child: data != null
+              ? ListView.builder(
+                  itemCount: data!.length,
+                  itemBuilder: ((context, index) {
+                    return ListTile(title: Text(data![index]));
+                  }))
+              : const CircularProgressIndicator()),
     );
   }
 }

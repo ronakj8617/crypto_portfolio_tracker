@@ -2,9 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html';
-import 'dart:io';
-import 'dart:ui';
 
 import 'package:crypto_portfolio_trackeer/Text%20Names/titles.dart';
 import 'package:crypto_portfolio_trackeer/Theme%20Data/themeData.dart';
@@ -31,7 +28,7 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   Uri url = Uri.parse('');
-  List<String>? data;
+  List<dynamic>? data;
 
   @override
   void initState() {
@@ -46,12 +43,12 @@ class _MainState extends State<Main> {
   }
 
   void fetchData() async {
-    data = await getCurrencies() as List<String>;
+    data = await getCurrencies();
 
     setState(() {});
   }
 
-  Future<List> getCurrencies() async {
+  Future<List<dynamic>> getCurrencies() async {
     Uri apiUrl = Uri.parse(
         'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest');
     http.Response response = await http.get(apiUrl, headers: {
@@ -61,16 +58,7 @@ class _MainState extends State<Main> {
 
     Map<String, dynamic> map = json.decode(response.body);
 
-    var len = map['data'].length;
-
-    List<String> data1 = new List.empty(growable: true);
-
-    for (int i = 0; i < len; i++) {
-      var x = map['data'][i]["name"];
-      data1.add(x);
-    }
-
-    return data1;
+    return map['data'];
   }
 
   @override
@@ -112,7 +100,11 @@ class _MainState extends State<Main> {
                               children: [
                                 Row(
                                   children: [
-                                    Text(data![index]),
+                                    Text(data![index]['name']),
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    Text(data![index]['symbol']),
                                   ],
                                 )
                               ],

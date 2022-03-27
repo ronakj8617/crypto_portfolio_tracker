@@ -96,6 +96,17 @@ class _MainState extends State<Main> {
                       ? ListView.builder(
                           itemCount: data!.length,
                           itemBuilder: ((context, index) {
+                            List quote = data as List;
+                            final quoteMap = quote.whereType<Map>();
+                            if (quoteMap.iterator.moveNext() != null) {
+                              final map;
+                              quoteMap.forEach((element) {
+                                print('\n'+element.keys.iterator.current['id']);
+                              });
+
+                              // print(map);
+                            }                         
+                            //  print(map);
                             return Column(
                               children: [
                                 Row(
@@ -104,7 +115,7 @@ class _MainState extends State<Main> {
                                     SizedBox(
                                       width: 30,
                                     ),
-                                    Text(data![index]['symbol']),
+                                    Text('sfsf'),
                                   ],
                                 )
                               ],

@@ -86,7 +86,20 @@ class _MainState extends State<Main> {
                 SizedBox(
                     height: 120,
                     child: Row(
-                      children: [Text('Name'), Text('USD'), Text('BTC')],
+                      children: [
+                        Text('Name'),
+                        SizedBox(
+                          width: 100,
+                        ),
+                        Text('USD'),
+                        SizedBox(
+                          width: 100,
+                        ),
+                        Text('BTC'),
+                        SizedBox(
+                          width: 0,
+                        ),
+                      ],
                     )),
                 SizedBox(
                   height: 40,
@@ -98,28 +111,39 @@ class _MainState extends State<Main> {
                           itemBuilder: ((context, index) {
                             List quote = data as List;
                             final quoteMap = quote.whereType<Map>();
+                            var map;
                             if (quoteMap.iterator.moveNext() != null) {
-                              final map;
                               quoteMap.forEach((element) {
-                                print('\n'+element.keys.iterator.current['id']);
+                                // print('\n'+element.keys.iterator.current['id']);
+                                print(element['quote']['USD']);
+                                map = element['quote'];
                               });
 
                               // print(map);
-                            }                         
+                            }
                             //  print(map);
-                            return Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(data![index]['name']),
-                                    SizedBox(
-                                      width: 30,
-                                    ),
-                                    Text('sfsf'),
-                                  ],
-                                )
-                              ],
-                            );
+                            return map != null
+                                ? Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(data![index]['name']),
+                                          SizedBox(
+                                            width: 30,
+                                          ),
+                                          Text(map['USD']['price'].toString()),
+                                          SizedBox(
+                                            width: 30,
+                                          ),
+                                          Text(map['BTC']['price'].toString()),
+                                          SizedBox(
+                                            width: 30,
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                : CircularProgressIndicator();
 
                             // return ListTile(title: Text(data![index]));
                           }))
